@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ar">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>تقييم النجوم</title>
+    </head>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
+
+body {
+    font-family: 'Cairo', sans-serif;
+    text-align: right;
+    direction: rtl;
+    padding: 20px;
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.rating-container {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    gap: 10px;
+}
+
+.star {
+    font-size: 40px;
+    cursor: pointer;
+    transition: transform 0.3s ease, color 0.3s ease;
+    color: gray;
+}
+
+.selected {
+    color: gold;
+}
+
+.comment-section {
+    margin-top: 20px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 100%;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    resize: none;
+}
+
+textarea {
+    height: 100px;
+}
+
+button {
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 30px;
+    font-size: 14px;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    width: auto;
+}
+
+button:hover {
+    transform: scale(1.1);
+    background-color: #218838;
+}
+
+.comments-list {
+    margin-top: 20px;
+    text-align: right;
+    width: 100%;
+    max-width: 600px;
+}
+
+.comment-item {
+    background: white;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    opacity: 0;
+    animation: fadeInUp 1s forwards;
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.user-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 20px;
+    color: #555;
+}
+
+.comment-content {
+    flex-grow: 1;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.comment-header strong {
+    font-size: 16px;
+}
+
+.comment-header .time {
+    color: #888;
+    font-size: 14px;
+}
+
+.comment-text {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.rating-display {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    color: gold;
+    font-size: 18px;
+}
+
+.sort-buttons {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+.sort-buttons button {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 30px;
+    font-size: 14px;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.sort-buttons button:hover {
+    transform: scale(1.1);
+    background-color: #0056b3;
+}
+
+.sort-buttons button:focus {
+    outline: none;
+}
+
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+@media (max-width: 600px) {
+    body {
+        margin-left: 26px;
+    }
+}
+
+.button-like {
+    border: 2px solid #8a8a8a;
+    background-color: transparent;
+    text-decoration: none;
+    padding: 1rem;
+    position: relative;
+    vertical-align: middle;
+    text-align: center;
+    display: inline-block;
+    border-radius: 3rem;
+    color: #8a8a8a;
+    transition: all ease 0.4s;
+}
+
+.button-like .fa,
+.button-like span {
+    transition: all ease 0.4s;
+}
+
+.button-like:focus {
+    background-color: transparent;
+}
+
+.button-like:focus .fa,
+.button-like:focus span {
+    color: #8a8a8a;
+}
+
+.button-like:hover {
+    border-color: #cc4b37;
+    background-color: transparent;
+}
+
+.button-like:hover .fa,
+.button-like:hover span {
+    color: #cc4b37;
+}
+
+.liked {
+    background-color: #cc4b37;
+    border-color: #cc4b37;
+}
+
+.liked .fa,
+.liked span {
+    color: #fefefe;
+}
+
+.liked:focus {
+    background-color: #cc4b37;
+}
+
+.liked:focus .fa,
+.liked:focus span {
+    color: #fefefe;
+}
+
+.liked:hover {
+    background-color: #cc4b37;
+    border-color: #cc4b37;
+}
+
+.liked:hover .fa,
+.liked:hover span {
+    color: #fefefe;
+}
+
+.ssp {
+    margin-right: 10px;
+}
+
+.wow {
+    margin-block-end: 0px;
+    margin-block-start: 0px;
+}
+
+</style>
+
+    <body>
+        <h2>كيف تقيّم تجربتك؟</h2>
+        <p class="wow" id="rating-text"></p>
+        <div class="rating-container">
+            <span class="star" data-value="1">★</span>
+            <span class="star" data-value="2">★</span>
+            <span class="star" data-value="3">★</span>
+            <span class="star" data-value="4">★</span>
+            <span class="star" data-value="5">★</span>
+        </div>
+
+        <h3>اكتب تعليقك</h3>
+        <div>
+            <input type="text" id="username" placeholder="اسمك" maxlength="50">
+            <textarea id="comment" placeholder="أضف تعليقك هنا..." maxlength="200"></textarea>
+            <br>
+            <button onclick="submitComment()">إرسال</button>
+            <br>
+            <br>
+            <br>
+        </div>
+        <div class="sort-buttons">
+            <button onclick="sortComments('newest')">الأحدث</button>
+            <button onclick="sortComments('highest')">الاقل تقييمًا</button>
+            <button onclick="sortComments('lowest')">الاعلى تقييمًا</button>
+            <button onclick="sortComments('leastHelpful')">الاكثر اعجابًا</button> <!-- زر الأقل إعجابًا -->
+        </div>
+        <div class="comments-list" id="comments-list"></div>
+
+        <button onclick="clearComments()" style="margin-top: 20px; background-color: #dc3545;">مسح جميع التعليقات</button>
+
+        <script>
+    const stars = document.querySelectorAll(".star");
+    let selectedRating = 0;
+    const ratingText = document.getElementById("rating-text");
+    const ratingLabels = ["مقبول", "جيد", "جيد جدًا", "ممتاز", "ممتاز جدًا"];
+    let comments = [];
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const savedComments = JSON.parse(localStorage.getItem("comments")) || [];
+        comments = savedComments;
+        savedComments.forEach((comment) => displayComment(comment));
+    });
+
+    stars.forEach(star => {
+        star.addEventListener("click", () => {
+            const username = document.getElementById("username").value.trim();
+            if (!username) {
+                alert("يرجى إدخال اسم المستخدم أولاً.");
+                return;
+            }
+
+            const existingUserComment = comments.find(comment => comment.username === username);
+            if (existingUserComment) {
+                alert("لقد قمت بالتقييم مسبقًا ولا يمكنك تعديله.");
+                return;
+            }
+
+            selectedRating = parseInt(star.getAttribute("data-value"));
+            updateStars(selectedRating);
+            ratingText.textContent = ratingLabels[selectedRating - 1] || "";
+        });
+    });
+
+    function updateStars(rating) {
+        stars.forEach((star, index) => {
+            if (index < rating) {
+                star.classList.add("selected");
+            } else {
+                star.classList.remove("selected");
+            }
+        });
+    }
+
+    document.getElementById("username").addEventListener("input", function () {
+        const username = this.value.trim();
+        const existingUserComment = comments.find(comment => comment.username === username);
+        if (existingUserComment) {
+            selectedRating = existingUserComment.rating;
+            updateStars(selectedRating);
+            ratingText.textContent = ratingLabels[selectedRating - 1] || "";
+        } else {
+            selectedRating = 0;
+            updateStars(0);
+            ratingText.textContent = "";
+        }
+    });
+
+    function submitComment() {
+        const username = document.getElementById("username").value.trim();
+        const commentText = document.getElementById("comment").value.trim();
+        
+        if (username === "" || commentText === "") {
+            alert("من فضلك أكمل البيانات.");
+            return;
+        }
+
+        let existingUserComment = comments.find(comment => comment.username === username);
+
+        if (!existingUserComment && selectedRating === 0) {
+            alert("يرجى اختيار تقييم عند التعليق لأول مرة.");
+            return;
+        }
+
+        if (existingUserComment && existingUserComment.text === commentText) {
+            alert("لقد قمت بالفعل بنشر هذا التعليق.");
+            return;
+        }
+
+        let commentId = username + "_" + new Date().getTime();
+        let comment = {
+            id: commentId,
+            username: username,
+            text: commentText,
+            rating: selectedRating,
+            helpfulVotes: 0,
+            time: new Date().toLocaleString('ar-JO', { hour12: false }).slice(0, -3),  // إزالة الثواني
+        };
+
+        if (!existingUserComment) {
+            comments.push(comment);
+        } else {
+            comments.push({ ...comment, rating: existingUserComment.rating });
+        }
+
+        localStorage.setItem("comments", JSON.stringify(comments));
+        displayComment(comment);
+
+        document.getElementById("username").value = "";
+        document.getElementById("comment").value = "";
+
+        resetStars();
+    }
+
+    function displayComment(comment) {
+        const commentList = document.getElementById("comments-list");
+        const commentItem = document.createElement("div");
+        commentItem.classList.add("comment-item");
+        commentItem.id = comment.id;
+
+        commentItem.innerHTML = `
+            <div class="user-avatar">${comment.username.charAt(0)}</div>
+            <div class="comment-content">
+                <div class="comment-header">
+                    <strong>${comment.username}</strong>
+                    <span class="time">${comment.time}</span>
+                </div>
+                <div class="rating-display">
+                    ${"★".repeat(comment.rating)}${"☆".repeat(5 - comment.rating)}
+                </div>
+                <p class="comment-text">${comment.text}</p>
+                <button class="button-like" id="like-btn-${comment.id}" onclick="voteHelpful('${comment.id}')">
+                    <span>${comment.helpfulVotes}</span> إعجاب
+                </button>
+            </div>
+        `;
+        commentList.prepend(commentItem);  // تغيير appendChild إلى prepend
+        setTimeout(() => {
+            commentItem.style.opacity = 1;
+            commentItem.style.transform = "translateY(0)";
+        }, 100);
+    }
+
+    function voteHelpful(commentId) {
+        const comment = comments.find(c => c.id === commentId);
+        if (comment) {
+            comment.helpfulVotes++;
+            localStorage.setItem("comments", JSON.stringify(comments));
+            const likeButton = document.getElementById(`like-btn-${commentId}`);
+            likeButton.querySelector("span").textContent = comment.helpfulVotes;
+        }
+    }
+
+    function sortComments(criteria) {
+        console.log(`Sorting by: ${criteria}`);
+        let sortedComments = [];
+
+        if (criteria === 'newest') {
+            sortedComments = [...comments].sort((a, b) => new Date(b.time) - new Date(a.time));
+        } else if (criteria === 'highest') {
+            sortedComments = [...comments].sort((a, b) => b.rating - a.rating || b.helpfulVotes - a.helpfulVotes);
+        } else if (criteria === 'lowest') {
+            sortedComments = [...comments].sort((a, b) => a.rating - b.rating || a.helpfulVotes - b.helpfulVotes);
+        } else if (criteria === 'mostHelpful') {
+            sortedComments = [...comments].sort((a, b) => b.helpfulVotes - a.helpfulVotes || b.rating - a.rating);
+        } else if (criteria === 'leastHelpful') {  // فرز التعليقات حسب الأقل إعجابًا
+            sortedComments = [...comments].sort((a, b) => a.helpfulVotes - b.helpfulVotes || b.rating - a.rating);
+        }
+
+        const commentList = document.getElementById("comments-list");
+        commentList.innerHTML = "";
+        sortedComments.forEach((comment) => displayComment(comment));
+    }
+
+    document.querySelectorAll('.sort-buttons button').forEach(button => {
+        button.addEventListener('click', function (event) {
+            event.preventDefault();
+            const criteria = this.getAttribute('onclick').match(/'([^']+)'/)[1];
+            sortComments(criteria);
+        });
+    });
+
+    function clearComments() {
+        localStorage.removeItem("comments");
+        comments = [];
+        document.getElementById("comments-list").innerHTML = "";
+    }
+
+    function resetStars() {
+        selectedRating = 0;
+        stars.forEach(s => s.classList.remove("selected"));
+        ratingText.textContent = "";
+    }
+</script>
+
+    </body>
+</html>
